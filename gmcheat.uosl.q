@@ -1,6 +1,7 @@
 inherits defines;
 member string command;
 member int theinteger1;
+member int theinteger2;
 member string thestring1;
 function string GetLocationDescription(loc inLocation,loc inReferenceLocation)
 {
@@ -130,195 +131,258 @@ trigger speech<"[*">(obj speaker,string arg)
    }
    else
    {
-    if(command == "recover")
+    if(command == "setstatother")
     {
-     setCurHP(speaker,getMaxHP(speaker));
-     setCurMana(speaker,getMaxMana(speaker));
-     setCurFatigue(speaker,getMaxFatigue(speaker));
-     systemMessage(speaker,"You have been refreshed.");
-    }
-    else
-    {
-     if(command == "setskill")
+     if(argcount != 0x03)
      {
-      int skillindex;
-      int skillvalue;
-      if(argcount < 0x03)
-      {
-       return(1);
-      }
-      skillvalue=strtoi(args[0x02]);
-      if(args[0x01] == "all")
-      {
-       for(int k=0x00;k < 0x27;k++)
-       {
-        setSkillLevel(speaker,k,skillvalue * 0x0A);
-       }
-       systemMessage(speaker,"All of your skills are now " + skillvalue);
-      }
-      else
-      {
-       skillindex=strtoi(args[0x01]);
-       if(skillindex < 0x00 || (skillindex > 0x27))
-       {
-        systemMessage(speaker,"This skill(" + skillindex + ") does not exist. 0-39 only");
-        return(1);
-       }
-       if(skillvalue < 0x00)
-       {
-        systemMessage(speaker,"Please don't set your skills negative.");
-        return(1);
-       }
-       if(skillvalue > 0x64)
-       {
-        systemMessage(speaker,"No skills over 100, trammy.");
-        return(1);
-       }
-       string msg="Now skill is " + skillvalue + " in " + getSkillName(skillindex);
-       systemMessage(speaker,msg);
-       setSkillLevel(speaker,skillindex,skillvalue * 0x0A);
-      }
+      systemMessage(speaker,"[setstat [str/dex/int] [value]");
+      return(1);
+     }
+     string stat;
+     theinteger2=strtoi(args[0x02]);
+     if(theinteger2 < 10)
+     {
+      systemMessage(speaker,"Cannot set stat to less than 10");
+      return(1);
      }
      else
      {
-      if(command == "listskills")
+      stat=args[0x01];
+     }
+     systemMessage(speaker,stat);
+     if(stat == "str")
+     {
+      theinteger1=0;
+     }
+     else
+     {
+      if(stat == "dex")
       {
-       for(int i=0x00;i < 0x27;i++)
-       {
-        systemMessage(speaker,"" + i + ": " + getSkillName(i));
-       }
+       theinteger1=1;
       }
       else
       {
-       if(command == "getserial")
+       if(stat == "int")
        {
-        needobj=1;
+        theinteger1=2;
        }
        else
        {
-        if(command == "gethue")
+        if(stat == "all")
         {
-         needobj=1;
+         theinteger1=3;
         }
         else
         {
-         if(command == "getheight")
+         return(1);
+        }
+       }
+      }
+     }
+     needobj=1;
+    }
+    else
+    {
+     if(command == "setkills")
+     {
+      if(argcount != 2)
+      {
+       return(1);
+      }
+      theinteger1=strtoi(args[0x01]);
+      needobj=1;
+     }
+     else
+     {
+      if(command == "recover")
+      {
+       needobj=1;
+      }
+      else
+      {
+       if(command == "setskillother")
+       {
+        needobj=1;
+        int skillindex;
+        int skillvalue;
+        if(argcount < 0x03)
+        {
+         return(1);
+        }
+        theinteger2=strtoi(args[0x02]);
+        if(args[0x01] == "all")
+        {
+         theinteger1=0x28;
+        }
+        else
+        {
+         skillindex=strtoi(args[0x01]);
+         theinteger1=skillindex;
+         if(skillindex < 0x00 || (skillindex > 0x27))
          {
-          needobj=1;
+          systemMessage(speaker,"This skill(" + skillindex + ") does not exist. 0-39 only");
+          return(1);
+         }
+         if(skillvalue < 0x00)
+         {
+          systemMessage(speaker,"Please don't set your skills negative.");
+          return(1);
+         }
+         if(skillvalue > 0x64)
+         {
+          systemMessage(speaker,"No skills over 100, trammy.");
+          return(1);
+         }
+        }
+       }
+       else
+       {
+        if(command == "setskill")
+        {
+         int skillindex;
+         int skillvalue;
+         if(argcount < 0x03)
+         {
+          return(1);
+         }
+         skillvalue=strtoi(args[0x02]);
+         if(args[0x01] == "all")
+         {
+          for(int k=0x00;k < 0x27;k++)
+          {
+           setSkillLevel(speaker,k,skillvalue * 0x0A);
+          }
+          systemMessage(speaker,"All of your skills are now " + skillvalue);
          }
          else
          {
-          if(command == "getelevation")
+          skillindex=strtoi(args[0x01]);
+          if(skillindex < 0x00 || (skillindex > 0x27))
           {
-           needloc=1;
+           systemMessage(speaker,"This skill(" + skillindex + ") does not exist. 0-39 only");
+           return(1);
+          }
+          if(skillvalue < 0x00)
+          {
+           systemMessage(speaker,"Please don't set your skills negative.");
+           return(1);
+          }
+          if(skillvalue > 0x64)
+          {
+           systemMessage(speaker,"No skills over 100, trammy.");
+           return(1);
+          }
+          string msg="Now skill is " + skillvalue + " in " + getSkillName(skillindex);
+          systemMessage(speaker,msg);
+          setSkillLevel(speaker,skillindex,skillvalue * 0x0A);
+         }
+        }
+        else
+        {
+         if(command == "listskills")
+         {
+          for(int i=0x00;i < 0x27;i++)
+          {
+           systemMessage(speaker,"" + i + ": " + getSkillName(i));
+          }
+         }
+         else
+         {
+          if(command == "getserial")
+          {
+           needobj=1;
           }
           else
           {
-           if(command == "where")
+           if(command == "gethue")
            {
-            loc curLocation=getLocation(speaker);
-            systemMessage(speaker,"loc = " + curLocation + " : " + GetLocationDescription(curLocation,curLocation));
+            needobj=1;
            }
            else
            {
-            if(command == "teleport")
+            if(command == "getheight")
             {
-             loc temploc;
-             if(argcount < 3)
-             {
-              systemMessage(speaker,"Where do you want to teleport to?");
-              needloc=1;
-              query=0;
-             }
-             else
-             {
-              if(argcount == 3)
-              {
-               setX(temploc,strtoi(args[1]));
-               setY(temploc,strtoi(args[2]));
-               setZ(temploc,getElevation(temploc));
-               if(isInMap(temploc))
-               {
-                teleport(speaker,temploc);
-                systemMessage(speaker,"teleport(" + temploc + ") = " + getLocation(speaker));
-               }
-               else
-               {
-                systemMessage(speaker,"loc(" + temploc + ") = invalid!");
-               }
-              }
-              else
-              {
-               if(argcount == 4)
-               {
-                setX(temploc,strtoi(args[1]));
-                setY(temploc,strtoi(args[2]));
-                setZ(temploc,strtoi(args[3]));
-                if(isInMap(temploc))
-                {
-                 teleport(speaker,temploc);
-                 systemMessage(speaker,"teleport(" + temploc + ") = " + getLocation(speaker));
-                }
-                else
-                {
-                 systemMessage(speaker,"teleport(" + temploc + ") = invalid!");
-                }
-               }
-              }
-             }
+             needobj=1;
             }
             else
             {
-             if(command == "setname")
+             if(command == "getelevation")
              {
-              if(argcount == 2)
-              {
-               thestring1=args[1];
-               needobj=1;
-               modify=1;
-              }
-              else
-              {
-               systemMessage(speaker,"Usage: setname <new name>");
-              }
+              needloc=1;
              }
              else
              {
-              if(command == "sethue")
+              if(command == "where")
               {
-               theinteger1=strtoi(args[1]);
-               needobj=1;
-               modify=1;
+               loc curLocation=getLocation(speaker);
+               systemMessage(speaker,"loc = " + curLocation + " : " + GetLocationDescription(curLocation,curLocation));
               }
               else
               {
-               if(command == "cnv")
+               if(command == "teleport")
                {
-                if(argcount != 2)
+                loc temploc;
+                if(argcount < 3)
                 {
-                 systemMessage(speaker,"Please include a value to create");
-                 return(1);
-                }
-                int toCreate=strtoi(args[1]);
-                obj o=createNoResObjectAt(toCreate,getLocation(speaker));
-                string weapon=getWeaponName(o);
-                systemMessage(speaker,"Created a " + weapon);
-                int reqdRes=0x00;
-                getResource(reqdRes,o,"metal",0x03,0x00);
-                systemMessage(speaker,"Required Resource: " + reqdRes);
-                int val=reqdRes + (getWeaponSpeed(o) * getAverageDamage(o) / 0x0C);
-                systemMessage(speaker,"the final val is: " + val);
-               }
-               else
-               {
-                if(command == "remove")
-                {
-                 needobj=1;
-                 modify=1;
+                 systemMessage(speaker,"Where do you want to teleport to?");
+                 needloc=1;
+                 query=0;
                 }
                 else
                 {
-                 if(command == "sethp")
+                 if(argcount == 3)
+                 {
+                  setX(temploc,strtoi(args[1]));
+                  setY(temploc,strtoi(args[2]));
+                  setZ(temploc,getElevation(temploc));
+                  if(isInMap(temploc))
+                  {
+                   teleport(speaker,temploc);
+                   systemMessage(speaker,"teleport(" + temploc + ") = " + getLocation(speaker));
+                  }
+                  else
+                  {
+                   systemMessage(speaker,"loc(" + temploc + ") = invalid!");
+                  }
+                 }
+                 else
+                 {
+                  if(argcount == 4)
+                  {
+                   setX(temploc,strtoi(args[1]));
+                   setY(temploc,strtoi(args[2]));
+                   setZ(temploc,strtoi(args[3]));
+                   if(isInMap(temploc))
+                   {
+                    teleport(speaker,temploc);
+                    systemMessage(speaker,"teleport(" + temploc + ") = " + getLocation(speaker));
+                   }
+                   else
+                   {
+                    systemMessage(speaker,"teleport(" + temploc + ") = invalid!");
+                   }
+                  }
+                 }
+                }
+               }
+               else
+               {
+                if(command == "setname")
+                {
+                 if(argcount == 2)
+                 {
+                  thestring1=args[1];
+                  needobj=1;
+                  modify=1;
+                 }
+                 else
+                 {
+                  systemMessage(speaker,"Usage: setname <new name>");
+                 }
+                }
+                else
+                {
+                 if(command == "sethue")
                  {
                   theinteger1=strtoi(args[1]);
                   needobj=1;
@@ -326,131 +390,168 @@ trigger speech<"[*">(obj speaker,string arg)
                  }
                  else
                  {
-                  if(command == "getinfo")
+                  if(command == "cnv")
                   {
-                   needobj=1;
-                   query=1;
+                   if(argcount != 2)
+                   {
+                    systemMessage(speaker,"Please include a value to create");
+                    return(1);
+                   }
+                   int toCreate=strtoi(args[1]);
+                   obj o=createNoResObjectAt(toCreate,getLocation(speaker));
+                   string weapon=getWeaponName(o);
+                   systemMessage(speaker,"Created a " + weapon);
+                   int reqdRes=0x00;
+                   getResource(reqdRes,o,"metal",0x03,0x00);
+                   systemMessage(speaker,"Required Resource: " + reqdRes);
+                   int val=reqdRes + (getWeaponSpeed(o) * getAverageDamage(o) / 0x0C);
+                   systemMessage(speaker,"the final val is: " + val);
                   }
                   else
                   {
-                   if(command == "addscript")
+                   if(command == "remove")
                    {
-                    thestring1=args[1];
                     needobj=1;
                     modify=1;
                    }
                    else
                    {
-                    if(command == "spawn" || (command == "spawnitem"))
+                    if(command == "sethp")
                     {
                      theinteger1=strtoi(args[1]);
-                     if(theinteger1 == 0)
-                     {
-                      s=arg;
-                      removePrefix(s,"[" + command + " ");
-                      theinteger1=StringToItem(s);
-                      if(theinteger1 >= 100000)
-                      {
-                       theinteger1=theinteger1 - 100000;
-                       command="spawn";
-                      }
-                      else
-                      {
-                       if(theinteger1 >= 0)
-                       {
-                        command="spawnitem";
-                        systemMessage(speaker,"the command is to spawn an item");
-                       }
-                      }
-                     }
-                     if(theinteger1 > 0 && (theinteger1 < 100000))
-                     {
-                      if(command == "spawn")
-                      {
-                       systemMessage(speaker,"Where do you want the NPC to spawn?");
-                      }
-                      else
-                      {
-                       if(command == "spawnitem")
-                       {
-                        systemMessage(speaker,"Where do you want the item to spawn?");
-                       }
-                      }
-                      needloc=1;
-                      modify=1;
-                     }
-                     else
-                     {
-                      systemMessage(speaker,"Invalid id.");
-                      command="";
-                     }
+                     needobj=1;
+                     modify=1;
                     }
                     else
                     {
-                     if(command == "test")
+                     if(command == "getinfo")
                      {
-                      if(argcount < 2)
+                      needobj=1;
+                      query=1;
+                     }
+                     else
+                     {
+                      if(command == "addscript")
                       {
-                       systemMessage(speaker,"What do you want to test?");
-                       return(0x01);
+                       thestring1=args[1];
+                       needobj=1;
+                       modify=1;
                       }
-                      command=args[1];
-                      test=1;
-                      if(command != "")
+                      else
                       {
-                       if(command == "scommand" || (command == "doscommand"))
+                       if(command == "spawn" || (command == "spawnitem"))
                        {
-                        doSCommand(this,"test");
-                       }
-                       else
-                       {
-                        if(command == "obscene" || (command == "isobscene"))
+                        theinteger1=strtoi(args[1]);
+                        if(theinteger1 == 0)
                         {
-                         if(argcount < 0x03)
+                         s=arg;
+                         removePrefix(s,"[" + command + " ");
+                         theinteger1=StringToItem(s);
+                         if(theinteger1 >= 100000)
                          {
-                          systemMessage(speaker,"What words do you want to test?");
-                          return(0x01);
+                          theinteger1=theinteger1 - 100000;
+                          command="spawn";
                          }
                          else
                          {
-                          for(i=0x02;i < argcount;i++)
+                          if(theinteger1 >= 0)
                           {
-                           if(isObscene(args[i]))
+                           command="spawnitem";
+                           systemMessage(speaker,"the command is to spawn an item");
+                          }
+                         }
+                        }
+                        if(theinteger1 > 0 && (theinteger1 < 100000))
+                        {
+                         if(command == "spawn")
+                         {
+                          systemMessage(speaker,"Where do you want the NPC to spawn?");
+                         }
+                         else
+                         {
+                          if(command == "spawnitem")
+                          {
+                           systemMessage(speaker,"Where do you want the item to spawn?");
+                          }
+                         }
+                         needloc=1;
+                         modify=1;
+                        }
+                        else
+                        {
+                         systemMessage(speaker,"Invalid id.");
+                         command="";
+                        }
+                       }
+                       else
+                       {
+                        if(command == "test")
+                        {
+                         if(argcount < 2)
+                         {
+                          systemMessage(speaker,"What do you want to test?");
+                          return(0x01);
+                         }
+                         command=args[1];
+                         test=1;
+                         if(command != "")
+                         {
+                          if(command == "scommand" || (command == "doscommand"))
+                          {
+                           doSCommand(this,"test");
+                          }
+                          else
+                          {
+                           if(command == "obscene" || (command == "isobscene"))
                            {
-                            systemMessage(speaker,arg[i] + " = obscene!");
+                            if(argcount < 0x03)
+                            {
+                             systemMessage(speaker,"What words do you want to test?");
+                             return(0x01);
+                            }
+                            else
+                            {
+                             for(i=0x02;i < argcount;i++)
+                             {
+                              if(isObscene(args[i]))
+                              {
+                               systemMessage(speaker,arg[i] + " = obscene!");
+                              }
+                              else
+                              {
+                               systemMessage(speaker,arg[i] + " = not obscene");
+                              }
+                             }
+                             return(0x01);
+                            }
                            }
                            else
                            {
-                            systemMessage(speaker,arg[i] + " = not obscene");
+                            if(command == "canseeloc")
+                            {
+                             needloc=1;
+                            }
+                            else
+                            {
+                             if(command == "canseeobj")
+                             {
+                              needobj=1;
+                             }
+                             else
+                             {
+                              command="";
+                             }
+                            }
                            }
                           }
-                          return(0x01);
                          }
                         }
                         else
                         {
-                         if(command == "canseeloc")
-                         {
-                          needloc=1;
-                         }
-                         else
-                         {
-                          if(command == "canseeobj")
-                          {
-                           needobj=1;
-                          }
-                          else
-                          {
-                           command="";
-                          }
-                         }
+                         command="";
                         }
                        }
                       }
-                     }
-                     else
-                     {
-                      command="";
                      }
                     }
                    }
@@ -647,29 +748,117 @@ trigger oortargetobj(obj user,obj usedon)
        }
        else
        {
-        if(command == "addscript")
+        if(command == "setstatother")
         {
-         tempstring="Adding script " + thestring1 + " to " + objToStr(usedon);
-         attachScript(usedon,thestring1);
-        }
-        else
-        {
-         if(command == "remove")
+         if(!isMobile(usedon))
          {
-          deleteObject(usedon);
-          tempstring="Destroyed.";
+          systemMessage(user,"You must target a mobile.");
+          return(1);
+         }
+         int stat=theinteger1;
+         int val=theinteger2;
+         if(stat < 3)
+         {
+          setRealStat(usedon,stat,val);
          }
          else
          {
-          if(command == "getinfo")
+          setRealStat(usedon,0x00,val);
+          setRealStat(usedon,0x01,val);
+          setRealStat(usedon,0x02,val);
+         }
+        }
+        else
+        {
+         if(command == "recover")
+         {
+          if(!isMobile(usedon))
           {
-           string weapon=getWeaponName(usedon);
-           int dmg=getAverageDamage(usedon);
-           int maxhits=getWeaponMaxHP(usedon);
-           int curhits=getWeaponCurHP(usedon);
-           int value=getValue(usedon);
-           int wepSpeed=getWeaponSpeed(usedon);
-           tempstring="AvDmg: " + dmg + " Max hits: " + maxhits + " Cur hits: " + curhits + " ItemID value:" + value + " Weapon Speed: " + wepSpeed;
+           systemMessage(user,"You must target a mobile.");
+           return(1);
+          }
+          setCurHP(usedon,getMaxHP(usedon));
+          setCurMana(usedon,getMaxMana(usedon));
+          setCurFatigue(usedon,getMaxFatigue(usedon));
+          if(user == usedon)
+          {
+           tempstring="You have been refreshed.";
+          }
+          else
+          {
+           tempstring="They have been refreshed.";
+          }
+         }
+         else
+         {
+          if(command == "setskillother")
+          {
+           if(!isMobile(usedon))
+           {
+            systemMessage(user,"You must target a mobile.");
+            return(1);
+           }
+           if(theinteger1 == 0x28)
+           {
+            for(int k=0x00;k < 0x27;k++)
+            {
+             setSkillLevel(usedon,k,theinteger2 * 0x0A);
+             tempstring="You have set all their skills to " + theinteger2;
+            }
+           }
+           else
+           {
+            tempstring="Now skill is " + theinteger2 + " in " + getSkillName(theinteger1);
+            setSkillLevel(usedon,theinteger1,theinteger2 * 0x0A);
+           }
+          }
+          else
+          {
+           if(command == "setkills")
+           {
+            if(!isMobile(usedon))
+            {
+             systemMessage(user,"You must target a mobile.");
+             return(1);
+            }
+            setMurderCount(usedon,theinteger1);
+            tempstring="Set murder counts to " + theinteger1;
+           }
+           else
+           {
+            if(command == "addscript")
+            {
+             tempstring="Adding script " + thestring1 + " to " + objToStr(usedon);
+             attachScript(usedon,thestring1);
+            }
+            else
+            {
+             if(command == "remove")
+             {
+              deleteObject(usedon);
+              tempstring="Destroyed.";
+             }
+             else
+             {
+              if(command == "getinfo")
+              {
+               string weapon=getWeaponName(usedon);
+               int dmg=getAverageDamage(usedon);
+               int maxhits=getWeaponMaxHP(usedon);
+               int curhits=getWeaponCurHP(usedon);
+               int value=getValue(usedon);
+               int wepSpeed=getWeaponSpeed(usedon);
+               int num;
+               int dice;
+               int mod;
+               int unknown;
+               getWeaponClass(usedon,num,dice,mod,unknown);
+               systemMessage(user,"WC=" + num + "d" + dice + "+" + mod + " Unknown is: " + unknown);
+               tempstring="AvDmg: " + dmg + " Max hits: " + maxhits + " Cur hits: " + curhits + " ItemID value:" + value + " Weapon Speed: " + wepSpeed;
+              }
+             }
+            }
+           }
           }
          }
         }

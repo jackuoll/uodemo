@@ -32,7 +32,7 @@ function int Q4IV(obj user, loc Q5YM, int Q4PO)
       {
         if(((0x2710 + (Q5KQ - Q5JC)) / 0x64) > random(0x01, 0x64))
         {
-          Q660(Q5HY);
+          curePoison(Q5HY);
           int Q527 = Q41J(user, Q5HY, 0x00, this);
           systemMessage(Q5HY, " " + getName(user) + " has cured you of all poisons!");
         }

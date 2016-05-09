@@ -18,7 +18,7 @@ trigger use(obj user)
     {
       doMobAnimation(user, 0x373A, 0x0A, 0x0F, 0x00, 0x00);
       sfx(getLocation(user), 0x01E0, 0x00);
-      Q660(user);
+      curePoison(user);
       systemMessage(user, "You feel cured of poison!");
     }
     else

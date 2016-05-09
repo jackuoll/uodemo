@@ -7,6 +7,7 @@ inherits defines;
 
 member string command;
 member int theinteger1;
+member int theinteger2;
 member string thestring1;
 
 function string GetLocationDescription(loc inLocation, loc inReferenceLocation)
@@ -120,12 +121,82 @@ trigger speech<"[*">(obj speaker, string arg)
 
 		return 1;
 	}
+	else if(command == "setstatother")
+	{
+		if(argcount != 0x03){
+			systemMessage(speaker, "[setstat [str/dex/int] [value]");
+			return 1;
+		}
+		string stat;
+		theinteger2 = strtoi(args[0x02]);
+		if(theinteger2<10){
+			systemMessage(speaker, "Cannot set stat to less than 10");
+			return 1;
+		} else {
+			stat=args[0x01];
+		}
+		
+		systemMessage(speaker, stat);
+		if(stat=="str"){
+			theinteger1 = 0;
+		} else if(stat=="dex"){
+			theinteger1 = 1;
+		} else if(stat=="int"){
+			theinteger1 = 2;
+		} else if(stat=="all"){
+			theinteger1 = 3;
+		} else {
+		  return 1;
+		}
+		needobj = 1;
+	}
+	else if(command == "setkills")
+	{
+	  if(argcount != 2){
+	    return 1;
+	  }
+	  
+	  theinteger1 = strtoi(args[0x01]);
+	  needobj = 1;
+	}
 	else if(command == "recover")
 	{
-		setCurHP(speaker, getMaxHP(speaker));
-		setCurMana(speaker, getMaxMana(speaker));
-		setCurFatigue(speaker, getMaxFatigue(speaker));
-		systemMessage(speaker, "You have been refreshed.");
+		needobj = 1;
+	}
+    else if(command == "setskillother")
+	{
+	  needobj = 1;
+      int skillindex;
+      int skillvalue;
+      if(argcount < 0x03){
+	    return 1;
+	  }
+
+      theinteger2 = strtoi(args[0x02]); // value
+      if(args[0x01] == "all")
+      {
+	    theinteger1 = 0x28;
+      }
+      else
+      {
+        skillindex = strtoi(args[0x01]);
+		theinteger1 = skillindex;
+        if((skillindex < 0x00) || (skillindex > 0x27))
+        {
+          systemMessage(speaker, "This skill(" + skillindex + ") does not exist. 0-39 only");
+          return 1;
+        }
+        if(skillvalue < 0x00)
+        {
+          systemMessage(speaker, "Please don't set your skills negative.");
+          return 1;
+        }
+        if(skillvalue > 0x64)
+        {
+          systemMessage(speaker, "No skills over 100, trammy.");
+          return 1;
+        }
+      }
 	}
     else if(command == "setskill")
     {
@@ -483,6 +554,62 @@ trigger oortargetobj(obj user, obj usedon)
 	string weapon = getWeaponName(usedon);
     tempstring = "Adjusted " + weapon + " hits to " + curhits;
   }
+  else if(command == "setstatother")
+  {
+    if(!isMobile(usedon)){
+	  systemMessage(user, "You must target a mobile.");
+	  return 1;
+	}
+	int stat = theinteger1;
+	int val = theinteger2;
+	if(stat < 3){
+	  setRealStat(usedon, stat, val);
+	} else {
+	  setRealStat(usedon, 0x00, val);
+	  setRealStat(usedon, 0x01, val);
+	  setRealStat(usedon, 0x02, val);
+	}
+  }
+  else if(command == "recover")
+  {
+    if(!isMobile(usedon)){
+	  systemMessage(user, "You must target a mobile.");
+	  return 1;
+	}
+	setCurHP(usedon, getMaxHP(usedon));
+	setCurMana(usedon, getMaxMana(usedon));
+	setCurFatigue(usedon, getMaxFatigue(usedon));
+	if(user==usedon){
+	  tempstring = "You have been refreshed.";
+	} else {
+	  tempstring = "They have been refreshed.";
+	}
+  }
+  else if(command == "setskillother")
+  {
+    if(!isMobile(usedon)){
+	  systemMessage(user, "You must target a mobile.");
+	  return 1;
+	}
+	if(theinteger1 == 0x28){
+      for(int k = 0x00; k < 0x27; k ++){
+        setSkillLevel(usedon, k, theinteger2 * 0x0A);
+		tempstring = "You have set all their skills to " + theinteger2;
+	  }
+	} else {
+        tempstring = "Now skill is " + theinteger2 + " in " + getSkillName(theinteger1);
+        setSkillLevel(usedon, theinteger1, theinteger2 * 0x0A);
+	}
+  }
+  else if(command == "setkills")
+  {
+    if(!isMobile(usedon)){
+	  systemMessage(user, "You must target a mobile.");
+	  return 1;
+	}
+    setMurderCount(usedon, theinteger1);
+	tempstring = "Set murder counts to " + theinteger1;
+  }
   else if(command == "addscript")
   {
     tempstring = "Adding script " + thestring1 + " to " + objToStr(usedon);
@@ -502,7 +629,15 @@ trigger oortargetobj(obj user, obj usedon)
 	int value = getValue(usedon);
 	int wepSpeed = getWeaponSpeed(usedon);
 	
+	int num;
+	int dice;
+	int mod;
+	int unknown;
+    getWeaponClass(usedon, num, dice, mod, unknown);
+    systemMessage(user, "WC=" + num + "d" + dice + "+" + mod + " Unknown is: " + unknown);	
+	
     tempstring = "AvDmg: " + dmg + " Max hits: " + maxhits + " Cur hits: " + curhits + " ItemID value:" + value + " Weapon Speed: " + wepSpeed;
+	
 	
   }
   

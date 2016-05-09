@@ -1752,7 +1752,7 @@ function void Q42D(obj it, int Q5VX, int Q4ID)
   return;
 }
 
-function void Q660(obj it)
+function void curePoison(obj it)
 {
   setPoisoned(it, 0x00);
   if(hasObjVar(it, "poison_strength"))

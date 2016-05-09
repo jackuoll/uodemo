@@ -65,7 +65,7 @@ trigger use(obj user)
 {
   if(hasScript(user, "poisoned"))
   {
-    Q660(user);
+    curePoison(user);
     barkTo(this, user, "Thy poison has been cured.");
   }
   return(0x00);

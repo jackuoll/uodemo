@@ -27,7 +27,7 @@ function int Q4JD(obj user, obj usedon, int Q4PO)
       Q5NC = 0x01;
       if(((0x2710 + (Q5KQ - Q5JC)) / 0x64) > random(0x01, 0x64))
       {
-        Q660(usedon);
+        curePoison(usedon);
         int Q527 = Q41J(user, usedon, 0x00, this);
         systemMessage(user, "You have cured " + getName(usedon) + " of all poisons!");
         systemMessage(usedon, " " + getName(user) + " has cured you of all poisons!");
