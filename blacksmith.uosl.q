@@ -561,9 +561,11 @@ function void Q4ER()
     if(avDmg > 0)
     {
       int increaseOffset = avDmg * (durability - 100) / 100;
-	  increaseWeaponStats(this, 0, 0, increaseOffset, 0, Crafter);
+	  systemMessage(Crafter, "Adjusting the weapon stats of " + getWeaponName(this));
+	  increaseWeaponStats(this, 0, 0, increaseOffset, 0, Crafter); // MAJOR bug, this is increasing the damage of the tool and not the weapon
     }
   }
+  
   cleanup();
   if(weakenTool(Crafter, this)) // check if tool should break
   {
