@@ -385,7 +385,7 @@ trigger targetobj(obj user, obj usedon)
       Q4Q1 = setWeaponMaxHP(usedon, Q56H);
       Q4Q1 = setWeaponCurHP(usedon, Q4G6);
     }
-    if(Q46J(user, this))
+    if(weakenTool(user, this))
     {
       deleteObject(this);
     }
@@ -560,13 +560,12 @@ function void Q4ER()
     int avDmg = getAverageDamage(item);
     if(avDmg > 0)
     {
-      int scale = avDmg * (durability - 100) / 100;
-	  //Q581(this, 0, 0, scale, 0);
-	  scaleWithDebug(this, 0, 0, scale, 0, Crafter); // this makes no sense.
+      int increaseOffset = avDmg * (durability - 100) / 100;
+	  increaseWeaponStats(this, 0, 0, increaseOffset, 0, Crafter);
     }
   }
   cleanup();
-  if(Q46J(Crafter, this))
+  if(weakenTool(Crafter, this)) // check if tool should break
   {
     deleteObject(this);
   }

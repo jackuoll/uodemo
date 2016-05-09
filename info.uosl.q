@@ -10,7 +10,7 @@ function void Q47O(obj usedon, obj user)
   systemMessage(user, getName(usedon));
   systemMessage(user, "Loc=<" + getLocation(usedon) + ">");
   int num;
-  int Q5T5;
+  int dice;
   int mod;
   int Q4PP;
   if(isContainer(usedon))
@@ -25,8 +25,8 @@ function void Q47O(obj usedon, obj user)
     systemMessage(user, "Notoriety=" + getNotoriety(usedon));
     systemMessage(user, "Fame=" + getFame(usedon));
     systemMessage(user, "Karma=" + getKarma(usedon));
-    getWeaponClass(usedon, num, Q5T5, mod, Q4PP);
-    systemMessage(user, "NaturalWC=" + num + "d" + Q5T5 + "+" + mod);
+    getWeaponClass(usedon, num, dice, mod, Q4PP);
+    systemMessage(user, "NaturalWC=" + num + "d" + dice + "+" + mod);
     int s;
     int d;
     int i;
@@ -64,8 +64,8 @@ function void Q47O(obj usedon, obj user)
   systemMessage(user, "Weight=" + getWeight(usedon));
   if(isWeapon(usedon))
   {
-    getWeaponClass(usedon, num, Q5T5, mod, Q4PP);
-    systemMessage(user, "WC=" + num + "d" + Q5T5 + "+" + mod);
+    getWeaponClass(usedon, num, dice, mod, Q4PP);
+    systemMessage(user, "WC=" + num + "d" + dice + "+" + mod);
     systemMessage(user, "AC=" + getCurArmorClass(usedon));
     systemMessage(user, "HP=(" + getWeaponCurHP(usedon) + "/" + getWeaponMaxHP(usedon) + ")");
     systemMessage(user, "Speed=" + getWeaponSpeed(usedon));

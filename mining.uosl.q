@@ -142,7 +142,7 @@ trigger callback<0x72>()
   {
     systemMessage(user, "You dig some ore and put it at your feet.");
   }
-  if(Q46J(user, this))
+  if(weakenTool(user, this))
   {
     deleteObject(this);
   }

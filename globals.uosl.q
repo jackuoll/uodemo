@@ -240,22 +240,22 @@ function void Q581(obj it, int Q5DU, int Q5DV, int Q5DW, int Q5DX)
   return;
 }
 
-// duplication of Q581 - not entirely sure what this does.
-// this method is also used by "DamageBonus"
-// When exceptional, durScale is 4 for a halberd, but only 1 for a katana. what is it??
-function void scaleWithDebug(obj it, int Q5DU, int Q5DV, int durScale, int Q5DX, obj player)
+// duplication of Q581
+// "addOffset" is called from both smithy and "ruin", "vanq", etc.
+// none of the others are ever called upon.
+function void increaseWeaponStats(obj it, int addSides, int addDice, int addOffset, int unused, obj player)
 {
-  int Q5AX;
-  int Q5AY;
-  int Q5AZ;
-  int Q5B0;
-  getWeaponClass(it, Q5AX, Q5AY, Q5AZ, Q5B0);
-  Q5AX = Q5AX + Q5DU;
-  Q5AY = Q5AY + Q5DV;
-  Q5AZ = Q5AZ + durScale;
-  Q5B0 = Q5B0 + Q5DX;
-  systemMessage(player, "|" + Q5AX + "|" + Q5AY + "|" + Q5AZ + "|" + Q5B0);
-  setWeaponClass(it, Q5AX, Q5AY, Q5AZ, Q5B0);
+  int numSides;
+  int numDice;
+  int diceOffset;
+  int unknown;
+  getWeaponClass(it, numSides, numDice, diceOffset, unknown);
+  numSides = numSides + addSides;
+  numDice = numDice + addDice;
+  diceOffset = diceOffset + addOffset;
+  unknown = unknown + unused;
+  systemMessage(player, "Sides: " + numSides + " Dice:" + numDice + " Offset: " + diceOffset + " Unknown: " + unknown);
+  setWeaponClass(it, numSides, numDice, diceOffset, unknown);
   return;
 }
 

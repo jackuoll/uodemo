@@ -457,7 +457,7 @@ function int Q4ZJ(int Q5HC)
   return(0x00);
 }
 
-function int Q46J(obj user, obj Q66L)
+function int weakenTool(obj user, obj Q66L)
 {
   if(hasObjVar(Q66L, "lifeRemaining"))
   {

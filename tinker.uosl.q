@@ -14,7 +14,7 @@ member int Q68R;
 
 forward void Q4ER();
 
-function int Q46J(obj user, obj Q66L)
+function int weakenTool(obj user, obj Q66L)
 {
   if(hasObjVar(Q66L, "lifeRemaining"))
   {
@@ -619,7 +619,7 @@ function void Q4ER()
   {
     deleteObject(Q5UC);
   }
-  if(Q46J(Q62D, this))
+  if(weakenTool(Q62D, this))
   {
     deleteObject(this);
   }

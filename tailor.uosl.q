@@ -823,7 +823,7 @@ function void Q4ER()
   {
     removeObjVar(this, "inUse");
   }
-  if(Q46J(Q62D, this))
+  if(weakenTool(Q62D, this))
   {
     deleteObject(this);
   }

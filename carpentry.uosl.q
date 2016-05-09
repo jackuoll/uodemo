@@ -400,7 +400,7 @@ trigger targetloc(obj user, loc place, int objtype)
   {
     removeObjVar(this, "inUse");
   }
-  if(Q46J(user, this))
+  if(weakenTool(user, this))
   {
     deleteObject(this);
   }
