@@ -1,0 +1,11 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "invulnerable 0" to make a mobile vulnerable
+
+trigger creation()
+{
+  setMobFlag(this, 0x01, 0);
+  detachScript(this, "commandVulnerable");
+  return 1;
+}

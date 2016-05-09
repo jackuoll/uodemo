@@ -1,0 +1,15 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "kick"
+
+trigger creation()
+{
+  if(isPlayer(this))
+  {
+    removePlayerFromGame(this); // <- this doesn'seem to work.
+  }
+  detachScript(this, "commandKick");
+  return 1;
+}
+

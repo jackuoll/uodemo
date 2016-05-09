@@ -1,0 +1,16 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "resurrect"
+
+trigger creation()
+{
+  if(isMobile(this))
+  {
+    resurrect(this, 0);
+    // see also:     Q426(user, usedon, 0x00, "It is possible for you to be resurrected now. Do you wish to try?");
+  }
+  detachScript(this, "commandResurrect");
+  return 1;
+}
+

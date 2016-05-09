@@ -1,0 +1,11 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "freeze 0" to unfreeze a mobile
+
+trigger creation()
+{
+  setMobFlag(this, 0x02, 0x00);
+  detachScript(this, "commandUnFreeze");
+  return 1;
+}

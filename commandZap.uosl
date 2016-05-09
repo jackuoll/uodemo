@@ -1,0 +1,15 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "zap" to delete a mobile
+
+trigger creation()
+{
+  if( isMobile(this) && (!isPlayer(this)) )
+  {
+    deleteObject(this);
+  }
+  detachScript(this, "commandZap");
+  return 1;
+}
+

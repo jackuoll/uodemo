@@ -1,0 +1,21 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: 12/28/2011
+// Skara Ferry Teleporter "I would like to cross"
+
+// 709 2238 -2 -> 683 2242 -2
+// 683 2242 -2 -> 709 2238 -2
+// 683 2234 -2 -> 709 2238 -2
+
+trigger speech<"cross">(obj speaker, string arg)
+{
+  list Q5HT;
+  if(isValid(speaker))
+  {
+    if((getDistanceInTiles(getLocation(this), getLocation(speaker)) <= 2)  && (hasObjVar(this,"dest")))
+    {
+      teleport(speaker, getObjVar(this, "dest"));
+    }
+  }
+  return 0;
+}

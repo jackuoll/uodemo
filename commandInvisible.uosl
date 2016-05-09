@@ -1,0 +1,11 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "invisible 1" to invis/hide an object
+
+trigger creation()
+{
+  setInvisible(this,1);
+  detachScript(this, "commandInvisible");
+  return 1;
+}

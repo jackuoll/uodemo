@@ -1,0 +1,11 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "squelch 0" to unsquelch a mobile
+
+trigger creation()
+{
+  setMobFlag(this, 0x04, 0);
+  detachScript(this, "commandUnSquelch");
+  return 1;
+}

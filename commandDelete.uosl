@@ -1,0 +1,15 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: June 6 2011
+// Implements GM Text command "delete" to delete an item
+
+trigger creation()
+{
+  if(!isMobile(this))
+  {
+    deleteObject(this);
+  }
+  detachScript(this, "commandDelete");
+  return 1;
+}
+

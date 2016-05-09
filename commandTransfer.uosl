@@ -1,0 +1,19 @@
+// UOSL (Extended)
+// Authors: Derrick
+// Date: December 16 2011
+// Implements GM Text command "transfer" to move a mobile to the GameMasters Location
+
+trigger creation()
+{
+  loc transLoc;
+
+  if(hasObjVar(this, "transLoc"))
+  {
+    transLoc=getObjVar(this,"transLoc");
+    teleport(this,transLoc);
+    removeObjVar(this,"transLoc");
+  }
+
+  detachScript(this, "commandTransfer");
+  return 1;
+}
