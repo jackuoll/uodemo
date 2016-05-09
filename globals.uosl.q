@@ -34,7 +34,7 @@ function obj Q4S9(obj it)
   return(isAnyMultiBelow(getLocation(it)));
 }
 
-function int Q4BL(obj user, string Q5H3, int Q480)
+function int skillDisabled(obj user, string Q5H3, int Q480)
 {
   if(Q480)
   {
@@ -236,6 +236,25 @@ function void Q581(obj it, int Q5DU, int Q5DV, int Q5DW, int Q5DX)
   Q5AY = Q5AY + Q5DV;
   Q5AZ = Q5AZ + Q5DW;
   Q5B0 = Q5B0 + Q5DX;
+  setWeaponClass(it, Q5AX, Q5AY, Q5AZ, Q5B0);
+  return;
+}
+
+// duplication of Q581 - not entirely sure what this does.
+// this method is also used by "DamageBonus"
+// When exceptional, durScale is 4 for a halberd, but only 1 for a katana. what is it??
+function void scaleWithDebug(obj it, int Q5DU, int Q5DV, int durScale, int Q5DX, obj player)
+{
+  int Q5AX;
+  int Q5AY;
+  int Q5AZ;
+  int Q5B0;
+  getWeaponClass(it, Q5AX, Q5AY, Q5AZ, Q5B0);
+  Q5AX = Q5AX + Q5DU;
+  Q5AY = Q5AY + Q5DV;
+  Q5AZ = Q5AZ + durScale;
+  Q5B0 = Q5B0 + Q5DX;
+  systemMessage(player, "|" + Q5AX + "|" + Q5AY + "|" + Q5AZ + "|" + Q5B0);
   setWeaponClass(it, Q5AX, Q5AY, Q5AZ, Q5B0);
   return;
 }
